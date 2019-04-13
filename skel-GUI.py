@@ -55,9 +55,51 @@ class PageTwo(Frame):
 	def __init__(self, parent, controller):
 
 		Frame.__init__(self, parent)
-		self.controller=controller
-		Label(self, text="Next Page").pack()
+		self.controller=controller		Label(self, text="Calculator").pack()
 		Button(self, text="Next", command=lambda:self.closeCur(controller)).pack()
+
+		display = StringVar()
+		Entry(self, relief=SUNKEN, 
+			textvariable=display).pack(side=TOP, expand=YES, 
+			fill=BOTH)
+
+		for key in ("123", "456", "789", "-0."):
+			keyF = self.frame(TOP)
+			for char in key:
+				self.button(keyF, LEFT, char,
+					   lambda w=display, c=char: w.set(w.get() + c))
+		opsF = self.frame(TOP)
+		for char in "+-*/=":
+			if char == '=':
+				btn = self.button(opsF, LEFT, char)
+				btn.bind('<ButtonRelease-1>',
+						 lambda e, s=self, w=display: s.calc(w), '+')
+			else:
+				btn = self.button(opsF, LEFT, char,
+				   lambda w=display, s=' %s '%char: w.set(w.get()+s))
+
+		clearF = self.frame(BOTTOM)
+		self.button(clearF, LEFT, 'Clr', lambda w=display: w.set(''))
+
+	def button(self, btn, side, text, command=None): 
+		w = Button(btn, text=text, command=command) 
+		w.pack(side=side, expand=YES, fill=BOTH)
+		return w
+	def frame(self, side): 
+		w = Frame(self)
+		w.pack(side=side, expand=YES, fill=BOTH)
+		return w
+
+	def calc(self, display):
+		try:
+			display.set(eval(display.get()))
+		except:
+			display.set("ERROR")
+	
+	def closeCur(self,controller):
+		self.pack_forget()
+		controller.show_frame(PageThree)
+
 	
 	def closeCur(self,controller):
 		self.pack_forget()
