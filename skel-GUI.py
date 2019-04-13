@@ -55,7 +55,8 @@ class PageTwo(Frame):
 	def __init__(self, parent, controller):
 
 		Frame.__init__(self, parent)
-		self.controller=controller		Label(self, text="Calculator").pack()
+		self.controller=controller		
+		Label(self, text="Calculator").pack()
 		Button(self, text="Next", command=lambda:self.closeCur(controller)).pack()
 
 		display = StringVar()
